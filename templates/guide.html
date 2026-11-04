@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Guide - Influencer ROI Lab{% endblock %}
+{% block body %}
+<header class="hero" style="padding-bottom:70px"><div class="wrap"><h1>What every term means.</h1>
+<p>Plain explanations of each field you fill in, each number you get back, and the model behind it.</p></div></header>
+<main class="wrap" style="margin-top:-36px">
+<div class="bar"><input id="q" type="search" placeholder="Search a term, for example reach" aria-label="Search terms"><button class="btn alt" style="margin:0" onclick="window.print()">Print or save as PDF</button></div>
+{% for g, items in groups.items() %}<section class="gl"><h2>{{ g }}</h2>
+{% for term, short, more in items %}<article class="term"><h3>{{ term }}</h3><p>{{ short }}</p><p class="mute">{{ more }}</p></article>{% endfor %}</section>{% endfor %}
+<p id="none" class="empty" hidden>No term matches your search.</p>
+</main>
+<script>
+const q=document.getElementById('q');q.addEventListener('input',()=>{const s=q.value.toLowerCase();let any=0;
+document.querySelectorAll('.term').forEach(t=>{const ok=t.textContent.toLowerCase().includes(s);t.hidden=!ok;any+=ok});
+document.querySelectorAll('.gl').forEach(g=>g.hidden=![...g.querySelectorAll('.term')].some(t=>!t.hidden));
+document.getElementById('none').hidden=any>0});
+</script>
+{% endblock %}

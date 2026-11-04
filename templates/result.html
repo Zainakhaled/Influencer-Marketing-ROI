@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block body %}
+<header class="hero"><div class="wrap"><h1>Your estimate, {{ r.handle }}</h1></div></header>
+<main class="wrap"><div class="card">
+<p class="mute">Expected sales (units)</p>
+<div class="big">{{ r.predicted|n }}</div>
+<p style="margin-top:10px"><span class="{{ 'up' if diff>=0 else 'down' }}">{{ '%+.0f'|format(diff) }}%</span> compared with the average campaign ({{ m.avg_sales|n }})</p>
+<p class="mute" style="margin-top:6px">Typical range: {{ [r.predicted - m.rmse, 0]|max|n }} to {{ (r.predicted + m.rmse)|n }}. Engagement rate: {{ '%.1f'|format(r.eng_rate*100) }}%.</p>
+<a class="btn" href="/influencer">Try another campaign</a> <a class="btn alt" href="/guide">Read the guide</a>
+</div></main>
+{% endblock %}

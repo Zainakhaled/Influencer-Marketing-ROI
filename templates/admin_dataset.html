@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Dataset analytics{% endblock %}
+{% block body %}
+<header class="hero" style="padding-bottom:50px"><div class="wrap"><h1>Dataset analytics</h1>
+<p>What {{ stats.All.n|n }} past campaigns tell us. Pick a platform to filter.</p></div></header>
+<main class="wrap">
+<div class="pills" id="pills" role="group" aria-label="Platform filter"></div>
+<div class="kpis five" id="kpis"></div>
+<div class="split"><div class="panel"><h3>Average sales by platform</h3><canvas id="c_pl" height="220"></canvas></div>
+<div class="panel"><h3>Average sales by engagement level</h3><canvas id="c_band" height="220"></canvas><p class="mute sm">Campaigns sorted into 10 equal groups, from fewest to most engagements.</p></div></div>
+<div class="split"><div class="panel"><h3>By influencer category</h3><canvas id="c_cat" height="240"></canvas></div>
+<div class="panel"><h3>By campaign type</h3><canvas id="c_type" height="240"></canvas></div></div>
+<div class="split"><div class="panel"><h3>By campaign length (days)</h3><canvas id="c_dur" height="220"></canvas></div>
+<div class="panel"><h3>How sales are spread</h3><canvas id="c_hist" height="220"></canvas><p class="mute sm">Number of campaigns in each sales band.</p></div></div>
+<p class="mute sm">Sales here are the model-ready sales column built in Milestone 3. The original column in the raw file was random noise. Dates are left out because the file's dates run one per row and do not describe real time.</p>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const S={{ stats|tojson }},O='#FF6B2C',N='#0B1F3A',G='#C5CFDD',f=v=>Math.round(v).toLocaleString('en-US');
+Chart.defaults.font.family="Figtree,system-ui,sans-serif";Chart.defaults.color='#5B6B82';
+let cur='All',ch={};
+function draw(id,type,labels,data,color,horiz){ch[id]&&ch[id].destroy();
+ ch[id]=new Chart(document.getElementById(id),{type,data:{labels,datasets:[{data,backgroundColor:color,borderColor:type==='line'?O:undefined,borderWidth:type==='line'?3:0,borderRadius:6,tension:.3,pointRadius:type==='line'?4:0,pointBackgroundColor:O}]},
+ options:{indexAxis:horiz?'y':'x',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>f(c.parsed[horiz?'x':'y'])}}},scales:{x:{grid:{display:false}},y:{grid:{color:'#E6ECF4'},beginAtZero:true}}}})}
+function render(){const d=S[cur];
+ document.getElementById('kpis').innerHTML=[[f(d.n),'campaigns'],[f(d.sales),'average sales'],[f(d.eng),'average engagements'],[f(d.reach),'average reach'],[d.days,'average days']].map(([a,b])=>`<div class="k"><strong>${a}</strong><span>${b}</span></div>`).join('');
+ draw('c_pl','bar',S.platforms.labels,S.platforms.sales,S.platforms.labels.map(p=>cur==='All'||p===cur?O:G));
+ draw('c_band','line',d.band.labels,d.band.values,O);
+ draw('c_cat','bar',d.category.labels,d.category.values,O,true);
+ draw('c_type','bar',d.type.labels,d.type.values,N,true);
+ draw('c_dur','bar',d.duration.labels,d.duration.values,O);
+ draw('c_hist','bar',d.hist.labels,d.hist.counts,N);
+ document.querySelectorAll('#pills button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.p===cur))}
+document.getElementById('pills').innerHTML=['All','Instagram','YouTube','TikTok','Twitter'].map(p=>`<button data-p="${p}">${p}</button>`).join('');
+document.getElementById('pills').addEventListener('click',e=>{if(e.target.dataset.p){cur=e.target.dataset.p;render()}});
+render();
+</script>
+{% endblock %}
