@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block body %}
+<main class="doors">
+<a class="door d1" href="/influencer"><span class="who">Influencer</span>
+<h1>Plan your next campaign.</h1><p>Tell us the platform, your reach and how long it runs. Get the sales we expect.</p>
+<span class="go">Enter as influencer &rarr;</span><span class="fig">{{ n|n }}<small>past campaigns behind every estimate</small></span></a>
+<a class="door d2" href="/admin"><span class="who">Admin</span>
+<h1>See the whole picture.</h1><p>Every campaign submitted, plus the full dataset: platforms, niches, campaign types and what moves sales.</p>
+<span class="go">Enter as admin &rarr;</span><span class="fig">2<small>dashboards, password protected</small></span></a>
+</main>
+<p class="foot">New here? <a href="/guide">Read what every term means</a></p>
+{% endblock %}
