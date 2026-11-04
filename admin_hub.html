@@ -1,8 +1,0 @@
-{% extends "base.html" %}
-{% block body %}
-<header class="hero" style="padding-bottom:110px"><div class="wrap"><h1>Admin</h1><p>Choose what you want to look at.</p></div></header>
-<main class="wrap"><div class="split" style="margin-top:-72px">
-<a class="hub" href="/admin/dataset"><h2>Dataset analytics</h2><p>All {{ rows|n }} past campaigns: what sells by platform, niche, campaign type, length and engagement.</p><span class="go">Open &rarr;</span></a>
-<a class="hub o" href="/admin/submissions"><h2>Live submissions</h2><p>{{ n|n }} campaign{{ '' if n==1 else 's' }} entered by influencers on this site, with the expected sales for each.</p><span class="go">Open &rarr;</span></a>
-</div></main>
-{% endblock %}
