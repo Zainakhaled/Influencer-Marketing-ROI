@@ -99,7 +99,7 @@ def result(sid):
 def admin():
     err = None
     if request.method == "POST":
-        if hmac.compare_digest(request.form.get("password", ""), ADMIN_PASSWORD): session["admin"] = True
+        if hmac.compare_digest(request.form.get("password", "").encode(), ADMIN_PASSWORD.encode()): session["admin"] = True
         else: err = "Wrong password."
     if not session.get("admin"): return render_template("admin_login.html", err=err)
     n = db().execute("SELECT COUNT(*) FROM submissions").fetchone()[0]
