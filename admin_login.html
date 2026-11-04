@@ -1,8 +1,0 @@
-{% extends "base.html" %}
-{% block body %}
-<header class="hero" style="padding-bottom:110px"><div class="wrap"><h1>Admin access</h1><p>Enter the admin password to see the dashboards.</p></div></header>
-<main class="wrap"><form class="card" method="post" style="max-width:460px">
-{% if err %}<div class="err" role="alert">{{ err }}</div>{% endif %}
-<label for="pw">Password</label><input id="pw" name="password" type="password" autofocus required>
-<button class="btn" type="submit">Log in</button></form></main>
-{% endblock %}
