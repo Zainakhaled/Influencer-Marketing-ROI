@@ -1,6 +1,8 @@
 import os, json, hmac, sqlite3, joblib, pandas as pd
 from functools import wraps
-from flask import Flask, render_template, request, redirect, url_for, abort, session
+from jinja2 import DictLoader
+from bundle import TEMPLATES, CSS
+from flask import Response, Flask, render_template, request, redirect, url_for, abort, session
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 DB = os.environ.get("DB_PATH", os.path.join(BASE, "roi.db"))
@@ -11,6 +13,7 @@ STATS = json.load(open(os.path.join(BASE, "stats.json")))
 R = META["ranges"]
 
 app = Flask(__name__)
+app.jinja_loader = DictLoader(TEMPLATES)   # templates live in bundle.py, no folders needed
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-change-me")
 
 GLOSSARY = [
@@ -55,6 +58,9 @@ def predict(platform, category, ctype, eng, reach, days):
     for col in (f"platform_{platform}", f"influencer_category_{category}", f"campaign_type_{ctype}"):
         if col in row: row[col] = 1
     return max(50, round(float(MODEL.predict(pd.DataFrame([row])[META["columns"]])[0])))
+
+@app.get("/style.css")
+def style(): return Response(CSS, mimetype="text/css")
 
 @app.get("/")
 def home():
